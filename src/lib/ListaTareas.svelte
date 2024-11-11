@@ -1,20 +1,63 @@
 <script>
-    let task='';
-    let priority='meida'; //Por defecto, prioridad media
-    let tasks=[];
+    let task = '';
+    let priority = 'media';  // Por defecto, prioridad media
+    let tasks = [];
 
-    function addTaskPuh(){
-        task=task.push({text:tasks, priority});
+    function addTaskPush(){
+        console.log(tasks.push({ text: task, priority }))
     }
-
-    //Función para agregar una nueva tarea
-    function addTask(){
-        tasks = [
-            ...tasks,
-            {text: addTask, priority}
-        ];
-        task ='';
-        priority='media'; //Reinicia el campo de prioridad
+    // FunciÃ³n para agregar una nueva tarea
+    function addTask() {       
+            tasks = [
+                ...tasks,
+                { text: task, priority }
+            ];
+            task = '';
+            priority = 'media';  // Reiniciar el campo de prioridad       
         sortTasks();
     }
+
+    // FunciÃ³n para ordenar las tareas por prioridad
+    function sortTasks() {
+        tasks.sort((a, b) => {
+            const priorityOrder = { alta: 1, media: 2, baja: 3 };
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+        });
+    }
+
+    // FunciÃ³n para eliminar una tarea
+    function deleteTask(index) {
+        tasks = tasks.filter((_, i) => i !== index);
+    }
 </script>
+
+<style>
+    .alta { color: red; }
+    .media { color: orange; }
+    .baja { color: green; }
+</style>
+<div class="container">
+<h1>Lista de tareas con prioridad</h1>
+
+<div>
+    <input type="text" bind:value={task} placeholder="Nueva tarea" />
+    
+    <select bind:value={priority}>
+        <option value="alta">Alta</option>
+        <option value="media">Media</option>
+        <option value="baja">Baja</option>
+    </select>
+
+    <button on:click={addTaskPush}>Agregar tarea con Push</button>
+    <button on:click={addTask}>Agregar tarea con Spread Operator</button>
+</div>
+
+<ul>
+    {#each tasks as { text, priority }, index}
+        <li class={priority}>
+            {text} - {priority} 
+            <button on:click={() => deleteTask(index)}>Eliminar</button>
+        </li>
+    {/each}
+</ul>
+</div>
